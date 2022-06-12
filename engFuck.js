@@ -10,6 +10,7 @@ const path = readline.createInterface({
 var output = ""
 var value = 0
 var chars = 'abcdefghijklmnopqrstuvwxyz{}()\'"` .,'.split('')
+var vals = '0123456789'.split('')
 
 
 
@@ -31,6 +32,12 @@ path.question("Path to .ef file: ", (test) => {
             }
     
             output = output.substring(0, value - 1) + output[value - 1].toUpperCase() + output.substring(value, output.length)
+        }
+
+        if (input[i] === "#") {
+            let val = vals[value] ?? '0'
+            output += val
+            value = 0
         }
     
         if (input[i] === "=") {
