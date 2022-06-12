@@ -13,7 +13,6 @@ var chars = 'abcdefghijklmnopqrstuvwxyz{}()\'"` .,'.split('')
 var vals = '0123456789'.split('')
 
 
-
 path.question("Path to .ef file: ", (test) => {
     var fullPath = pathM.join(__dirname, test)
     var input = fs.readFileSync(fullPath, 'utf8').split("")
