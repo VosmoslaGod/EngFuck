@@ -42,7 +42,7 @@ program.command('compile')
                     return;
                 }
         
-                output = opts.output.substring(0, value - 1) + opts.output[opts.value - 1].toUpperCase() + opts.output.substring(opts.value, opts.output.length)
+                output = opts.output.substring(0, opts.value - 1) + opts.output[opts.value - 1].toUpperCase() + opts.output.substring(opts.value, opts.output.length)
             }
     
             if (input[i] === "#") {
