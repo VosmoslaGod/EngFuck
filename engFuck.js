@@ -16,7 +16,7 @@ program.command('compile')
         const limit = options.first ? 1 : undefined;
         var opts = {
             fullPath: path.join(__dirname, str),
-            chars: 'abcdefghijklmnopqrstuvwxyz{}()\'"` .,'.split(''),
+            chars: 'abcdefghijklmnopqrstuvwxyz{}()\'"+-=` .,'.split(''),
             vals: '0123456789'.split(''),
             value: 0,
             output: '',

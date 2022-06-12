@@ -73,4 +73,7 @@ Current values:
 34 space
 35 .
 36 ,
+37 +
+38 -
+39 =
 ```
