@@ -1,63 +1,64 @@
-const process = require('process')
-const readline = require("readline");
-const pathM = require('path')
+const { Command } = require('commander');
 const fs = require('fs')
-const path = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-});
+const path = require('path')
+const program = new Command()
 
-var output = ""
-var value = 0
-var chars = 'abcdefghijklmnopqrstuvwxyz{}()\'"` .,'.split('')
-var vals = '0123456789'.split('')
+program
+    .name('EngFuck interpreter')
+    .description('CLI interface to interpret EngFuck')
+    .version('0.1.0')
 
+program.command('compile')
+    .description('Compile a .ef file into .js')
+    .argument('<fileName>')
+    .option('-o, --output <fileName>')
+    .action((str, options) => {
+        const limit = options.first ? 1 : undefined;
+        var opts = {
+            fullPath: path.join(__dirname, str),
+            chars: 'abcdefghijklmnopqrstuvwxyz{}()\'"` .,'.split(''),
+            vals: '0123456789'.split(''),
+            value: 0,
+            output: '',
+        }
 
-path.question("Path to .ef file: ", (test) => {
-    var fullPath = pathM.join(__dirname, test)
-    var input = fs.readFileSync(fullPath, 'utf8').split("")
-    console.info(`Compiling your EngFuck file to JavaScript, please be patient...`)
+        const input = fs.readFileSync(opts.fullPath, 'utf8').split("")
+        if (options.output === undefined) {
+            console.log('Must have an output name!')
+            return
+        } 
+            const outputFn = options.output.toString()
 
-    for (var i = 0; i < input.length; i++) {
+        
+        for (var i = 0; i < input.length; i++) {
 
-        if (input[i] === "+") value++
-    
-        if (input[i] === "-") value--
-    
-        if (input[i] == "^") {
-            if (value < 1 || value > output.length) {
-                value = 0
-                return;
+            if (input[i] === "+") opts.value++
+        
+            if (input[i] === "-") opts.value--
+        
+            if (input[i] == "^") {
+                if (opts.value < 1 || opts.value > opts.output.length) {
+                    opts.value = 0
+                    return;
+                }
+        
+                output = opts.output.substring(0, value - 1) + opts.output[opts.value - 1].toUpperCase() + opts.output.substring(opts.value, opts.output.length)
             }
     
-            output = output.substring(0, value - 1) + output[value - 1].toUpperCase() + output.substring(value, output.length)
-        }
-
-        if (input[i] === "#") {
-            let val = vals[value] ?? '0'
-            output += val
-            value = 0
+            if (input[i] === "#") {
+                let val = opts.vals[opts.value] ?? '0'
+                opts.output += val
+                opts.value = 0
+            }
+        
+            if (input[i] === "=") {
+                let char = opts.chars[opts.value - 1] ?? "#"
+                opts.output += char
+                opts.value = 0
+            }
         }
     
-        if (input[i] === "=") {
-            let char = chars[value - 1] ?? "#"
-            output += char
-            value = 0
-        }
-    }
+        fs.writeFileSync(outputFn+'.js' ?? 'output', opts.output);
+    });
 
-    fs.writeFileSync('output.js', output);
-
-    console.info('Finished compiling, run code?')
-    path.question("Y/N: ", (test) => {
-        if (test === 'Y') {
-            var data = fs.readFileSync('output.js', 'utf-8')
-            eval(data)
-            path.close()
-        } else {
-            console.info('N selected, exiting compiler...')
-            path.close()
-        }
-    })
-})
-
+program.parse();
